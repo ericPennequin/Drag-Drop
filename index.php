@@ -31,6 +31,7 @@
 			flex-direction: row;
 
 
+
 		}
 		.colonne{
 			display: flex;
@@ -60,7 +61,9 @@
 				},
 				resize: function(e, ui) {
 					var that=this;
-					GetSize(that)
+					var offset = $(this).offset();
+					GetPosition(offset, that)
+					//GetSize(that)
 
 				},
 				stop: function(e, ui) {
@@ -138,10 +141,9 @@
 
 		$(".contenu").css({
 			width:common_widthsize + 'px',
-			height:common_heightsize + 'px',
-			border:  '#f47441 solid'
-
-
+			height:common_heightsize + 'px'
+			//border:  '#f47441',
+            
 		});
 
 
@@ -224,14 +226,17 @@
 	});
 
 	function GetPosition(offset, that) {
-		console.log('OffsetLeft : '+ that.offsetLeft);
-
+		console.log('ClientTop : '+ that.clientTop);
+		console.log('ClientLeft : '+ that.clientLeft);
+		console.log('clientWidth : '+ that.clientWidth);
 		var xPos = offset.left;
 		var yPos = offset.top;
 		//console.log(xPos + " " + yPos);
 		$('#posX').text('x (left) : ' + that.offsetLeft);
 		$('#posY').text('y (top) : ' + yPos);
-		GetSize(that)
+		$('#long').text('durée: ' + that.clientWidth + " mn");
+
+		//GetSize(that)
 
 	}
 

@@ -24,13 +24,152 @@
 
 	</head>
 	<body>
+	<style>
+
+		#limitation{
+			display: flex;
+			flex-direction: row;
+
+
+
+		}
+		.colonne{
+			display: flex;
+			flex-direction: column;
+
+		}
+
+
+	</style>
 <script type="text/javascript">
+	var granularity=15;
+	var common_widthsize=60;
+	var common_heightsize=30;
 	$(document).ready(function(){
-		$('#zone1').draggable({
-			//axis:'x',
+
+		$('.enfant').resizable().draggable();
+
+		$('.enfant')
+			.resizable({
+				axis:'x',
+				snap : true,
+				grid : [granularity , granularity],
+				animate : false,
+				animateDuration: "fast",
+				start: function(e, ui) {
+					//alert('resizing started');
+				},
+				resize: function(e, ui) {
+					var that=this;
+					var offset = $(this).offset();
+					GetPosition(offset, that)
+					//GetSize(that)
+
+				},
+				stop: function(e, ui) {
+					//alert('resizing stopped');
+				}
+			});
+
+		$('.enfant')
+			.draggable({
+				axis:'x',
+				snap : true,
+				grid : [common_heightsize , common_widthsize/2],
+				start:function (e,ui) {
+					console.log("start")
+
+				},
+				create:function (e,ui) {
+					console.log("create")
+				},
+				stop:function (e,ui) {
+					console.log("stop")
+				},
+				drag:function (e,ui) {
+
+					console.log("drag");
+					var offset = $(this).offset();
+					var that=this;
+					GetPosition(offset, that)
+				}
+
+
+			});
+
+
+
+/*
+
+		$('.contenu').draggable({
+			axis:'x',
+			snap : true,
+			grid : [common_heightsize , common_widthsize/2],
+
+			drag: function(){
+				var offset = $(this).offset();
+				var that=this;
+				GetPosition(offset, that)
+			/!*
+				var xPos = offset.left;
+				var yPos = offset.top;
+				console.log(xPos + " " + yPos);
+				$('#posX').text('x (left) : ' + xPos);
+				$('#posY').text('y (top) : ' + yPos);
+				GetSize(that=this)*!/
+
+			}
+
 			//axis:'y'
-			containment : '#limitation'
+			//containment : '#limitation'
+		}).find('.enfant').resizable({
+			axis:'x',
+			snap : true,
+			grid : [granularity , granularity],
+			animate : false,
+			animateDuration: "fast",
+			resize:function(){
+				GetSize(that=this)
+			}
+
+
 		});
+
+*/
+
+
+
+		$(".contenu").css({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px'
+			//border:  '#f47441',
+
+
+
+
+		});
+
+
+
+		$("#limitation").css({
+			width:common_widthsize * 12 + 'px',
+			height:common_heightsize * 12 + 'px'
+
+		});
+
+
+/*
+		$("#zone1").css({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px'
+
+		});
+		$("#zone1").attr({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px'
+
+		});
+
 
 		$('#drag').draggable();
 		$('#not-drag').draggable();
@@ -41,43 +180,291 @@
 		        alert('Action terminée !');
 		    }
 		});
+*/
 
-	})
+/*
+
+		$('#resizeDiv')
+			.draggable()
+			.resizable();
+
+		$('#resizeDiv')
+			.resizable({
+				start: function(e, ui) {
+					//alert('resizing started');
+				},
+				resize: function(e, ui) {
+
+				},
+				stop: function(e, ui) {
+					//alert('resizing stopped');
+				}
+			});
+
+		$('#resizeDiv')
+			.draggable({
+				start:function (e,ui) {
+					console.log("start")
+				},
+				create:function (e,ui) {
+					console.log("create")
+				},
+				stop:function (e,ui) {
+					console.log("stop")
+				},
+				drag:function (e,ui) {
+					console.log("drag")
+				}
+
+
+			});
+
+		$("#resizeDiv").css({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px'
+		})
+*/
+
+
+	});
+
+	function GetPosition(offset, that) {
+		console.log('ClientTop : '+ that.clientTop);
+		console.log('ClientLeft : '+ that.clientLeft);
+		console.log('clientWidth : '+ that.clientWidth);
+		var xPos = offset.left;
+		var yPos = offset.top;
+		//console.log(xPos + " " + yPos);
+		$('#posX').text('x (left) : ' + that.offsetLeft);
+		$('#posY').text('y (top) : ' + yPos);
+		$('#long').text('durée: ' + that.clientWidth + " mn");
+
+		//GetSize(that)
+
+	}
+
+	function GetSize(that) {
+		console.log($(that).width());
+		$('#long').text('durée: ' + $(that).width() + " mn");
+
+	}
+
 
 </script>
 
+	<!--
+	<div id="resizeDiv" style="background-color:#bff442; width:30px; height:30px">ff</div>
+-->
+
 		<div class="row">
-			<div class="col-lg-12" style="background-color: chartreuse; width:500px; height:500px" id="limitation">
+			<div class="col-lg-12">
+				<div class="col-lg-2">
+					<div>
+						<p id="posX"></p>
+						<p id="posY"></p>
+						<p id="long"></p>
+					</div>
 
 
+					<!--
 
+					<canvas id='zone1' width='+common_widthsize+' height='common_heightsize' style ='display:block;margin:auto; background:blue'>
+<canvas id='zone1' width="60px" height="30px" style ='display:block;margin:auto; background:blue'></canvas>
+					-->
 
-				<canvas id='zone1' width='30' height='30' style ='display:block;margin:auto; background:blue'>
-				</canvas>
-				<table>
-					<td>
+				</div>
+				<div class="col-lg-10">
 
+					<div class="col-lg-12" style="background-color:#bff442" id="limitation">
 
-					</td>
-				</table>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu">
+									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+									</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu">
+
+								</div>
+								<div class="contenu"></div>
+								<div class="contenu">
+									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+								</div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+							<div class="colonne">
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+
+					</div>
+				</div>
 
 			</div>
+
+
+
+		</div>
+<!--
 			<form>
 
 
 			</form>
 			<div id="drag">
-    <p>Ceci est un élément valide</p>
-</div>
+				<p>Ceci est un élément valide</p>
+			</div>
 
-<div id="not-drag">
-    <p>Ceci n'est pas un élément valide</p>
-</div>
+			<div id="not-drag">
+				<p>Ceci n'est pas un élément valide</p>
+			</div>
 
-<div id="drop">
-    <p>Déposer ici</p>
-</div>
-		</div>
+			<div id="drop">
+				<p>Déposer ici</p>
+			</div>
+
+	-->
+
 
 	</body>
 </html>

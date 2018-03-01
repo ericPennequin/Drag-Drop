@@ -25,7 +25,11 @@
 	</head>
 	<body>
 	<style>
-
+		table, tr,td{
+			border:1px solid black;
+			width: 30px;
+			height: 30px;
+		}
 		#limitation{
 			display: flex;
 			flex-direction: row;
@@ -37,6 +41,14 @@
 			flex-direction: column;
 
 		}
+/*
+		.contenu{
+			width: 30px;
+			height: 30px;
+			border: #f47441 solid;
+		}
+*/
+
 
 
 	</style>
@@ -45,75 +57,21 @@
 	var common_widthsize=60;
 	var common_heightsize=30;
 	$(document).ready(function(){
-
-		$('.enfant').resizable().draggable();
-
-		$('.enfant')
-			.resizable({
-				axis:'x',
-				snap : true,
-				grid : [granularity , granularity],
-				animate : false,
-				animateDuration: "fast",
-				start: function(e, ui) {
-					//alert('resizing started');
-				},
-				resize: function(e, ui) {
-					var that=this;
-					GetSize(that)
-
-				},
-				stop: function(e, ui) {
-					//alert('resizing stopped');
-				}
-			});
-
-		$('.enfant')
-			.draggable({
-				axis:'x',
-				snap : true,
-				grid : [common_heightsize , common_widthsize/2],
-				start:function (e,ui) {
-					console.log("start")
-
-				},
-				create:function (e,ui) {
-					console.log("create")
-				},
-				stop:function (e,ui) {
-					console.log("stop")
-				},
-				drag:function (e,ui) {
-
-					console.log("drag");
-					var offset = $(this).offset();
-					var that=this;
-					GetPosition(offset, that)
-				}
-
-
-			});
-
-
-
-/*
-
 		$('.contenu').draggable({
 			axis:'x',
 			snap : true,
 			grid : [common_heightsize , common_widthsize/2],
-
-			drag: function(){
+			drag: function(that=this){
 				var offset = $(this).offset();
 				var that=this;
 				GetPosition(offset, that)
-			/!*
+			/*
 				var xPos = offset.left;
 				var yPos = offset.top;
 				console.log(xPos + " " + yPos);
 				$('#posX').text('x (left) : ' + xPos);
 				$('#posY').text('y (top) : ' + yPos);
-				GetSize(that=this)*!/
+				GetSize(that=this)*/
 
 			}
 
@@ -132,7 +90,6 @@
 
 		});
 
-*/
 
 
 
@@ -144,16 +101,6 @@
 
 		});
 
-
-
-		$("#limitation").css({
-			width:common_widthsize * 12 + 'px',
-			height:common_heightsize * 12 + 'px'
-
-		});
-
-
-/*
 		$("#zone1").css({
 			width:common_widthsize + 'px',
 			height:common_heightsize + 'px'
@@ -166,6 +113,15 @@
 		});
 
 
+		$("#limitation").css({
+			width:common_widthsize * 12 + 'px',
+			height:common_heightsize * 12 + 'px'
+
+		});
+
+
+/*
+
 		$('#drag').draggable();
 		$('#not-drag').draggable();
 
@@ -177,59 +133,14 @@
 		});
 */
 
-/*
-
-		$('#resizeDiv')
-			.draggable()
-			.resizable();
-
-		$('#resizeDiv')
-			.resizable({
-				start: function(e, ui) {
-					//alert('resizing started');
-				},
-				resize: function(e, ui) {
-
-				},
-				stop: function(e, ui) {
-					//alert('resizing stopped');
-				}
-			});
-
-		$('#resizeDiv')
-			.draggable({
-				start:function (e,ui) {
-					console.log("start")
-				},
-				create:function (e,ui) {
-					console.log("create")
-				},
-				stop:function (e,ui) {
-					console.log("stop")
-				},
-				drag:function (e,ui) {
-					console.log("drag")
-				}
-
-
-			});
-
-		$("#resizeDiv").css({
-			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
-		})
-*/
-
-
 	});
 
 	function GetPosition(offset, that) {
-		console.log('OffsetLeft : '+ that.offsetLeft);
-
+		//var offset = $(that).offset();
 		var xPos = offset.left;
 		var yPos = offset.top;
-		//console.log(xPos + " " + yPos);
-		$('#posX').text('x (left) : ' + that.offsetLeft);
+		console.log(xPos + " " + yPos);
+		$('#posX').text('x (left) : ' + xPos);
 		$('#posY').text('y (top) : ' + yPos);
 		GetSize(that)
 
@@ -238,15 +149,11 @@
 	function GetSize(that) {
 		console.log($(that).width());
 		$('#long').text('durée: ' + $(that).width() + " mn");
-
+		
 	}
 
 
 </script>
-
-	<!--
-	<div id="resizeDiv" style="background-color:#bff442; width:30px; height:30px">ff</div>
--->
 
 		<div class="row">
 			<div class="col-lg-12">

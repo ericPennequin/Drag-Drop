@@ -31,13 +31,14 @@
 			flex-direction: row;
 
 
-
 		}
 		.colonne{
 			display: flex;
 			flex-direction: column;
 
 		}
+		div[class*='col']{
+			padding: 0;}
 
 
 	</style>
@@ -51,19 +52,22 @@
 
 		$('.enfant')
 			.resizable({
-				axis:'x',
 				snap : true,
 				grid : [granularity , granularity],
-				animate : false,
+				animate : true,
 				animateDuration: "fast",
+				//axis:'x',//Aucun effet
+				maxHeight:common_heightsize,
+				minHeight:common_heightsize,
+
 				start: function(e, ui) {
 					//alert('resizing started');
 				},
 				resize: function(e, ui) {
 					var that=this;
 					var offset = $(this).offset();
-					GetPosition(offset, that)
-					//GetSize(that)
+					GetPositionAndSize(offset, that)
+
 
 				},
 				stop: function(e, ui) {
@@ -74,8 +78,9 @@
 		$('.enfant')
 			.draggable({
 				axis:'x',
+				containment:"#limitation",
 				snap : true,
-				grid : [common_heightsize , common_widthsize/2],
+				grid : [granularity , granularity],
 				start:function (e,ui) {
 					console.log("start")
 
@@ -91,7 +96,7 @@
 					console.log("drag");
 					var offset = $(this).offset();
 					var that=this;
-					GetPosition(offset, that)
+					GetPositionAndSize(offset, that)
 				}
 
 
@@ -109,7 +114,7 @@
 			drag: function(){
 				var offset = $(this).offset();
 				var that=this;
-				GetPosition(offset, that)
+				GetPositionAndSize(offset, that)
 			/!*
 				var xPos = offset.left;
 				var yPos = offset.top;
@@ -141,16 +146,18 @@
 
 		$(".contenu").css({
 			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
-			//border:  '#f47441',
-            
+			height:common_heightsize + 'px',
+			//border:  '#f47441 inset'
+
+
+
 		});
 
 
 
 		$("#limitation").css({
-			width:common_widthsize * 12 + 'px',
-			height:common_heightsize * 12 + 'px'
+			width:common_widthsize * 14 + 'px',
+			height:common_heightsize * 14 + 'px'
 
 		});
 
@@ -225,26 +232,44 @@
 
 	});
 
-	function GetPosition(offset, that) {
+	function GetPositionAndSize(offset, that) {
 		console.log('ClientTop : '+ that.clientTop);
 		console.log('ClientLeft : '+ that.clientLeft);
 		console.log('clientWidth : '+ that.clientWidth);
-		var xPos = offset.left;
-		var yPos = offset.top;
-		//console.log(xPos + " " + yPos);
+		//var xPos = offset.left;
+		//var yPos = offset.top;
+		var embauche=7;
+
+		var duree = ConvMnHours(that.clientWidth);
+		var debut=ConvMnHours(that.offsetLeft+embauche*60);
+		var fin=ConvMnHours(that.offsetLeft+that.clientWidth+embauche*60);
+
+		$('#posX').text('début : ' +debut);
+		$('#posY').text('fin : ' + fin);
+		$('#long').text('durée: ' + duree);
+
+		/*
 		$('#posX').text('x (left) : ' + that.offsetLeft);
 		$('#posY').text('y (top) : ' + yPos);
 		$('#long').text('durée: ' + that.clientWidth + " mn");
+		*/
 
-		//GetSize(that)
-
-	}
-
-	function GetSize(that) {
-		console.log($(that).width());
-		$('#long').text('durée: ' + $(that).width() + " mn");
 
 	}
+
+	function ConvMnHours(mn) {
+		var hours=Math.floor(mn/60);
+		var minutes=mn%60;
+		var message;
+		if (minutes != 0){
+			message=hours + "h" + minutes;
+
+		}else {
+			message=hours + "h";
+		}
+		return message;
+	}
+
 
 
 </script>
@@ -256,12 +281,248 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="col-lg-2">
+					<p>Planning</p>
+				</div>
+
+				<div class="col-lg-8">
+
+					<div class="col-lg-12" style="background-color:#bff442" id="limitation">
+
+						<div class="colonne">
+							<div class="head">7-8h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">8-9h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu">
+								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+								</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu"></div>
+							<div class="contenu">
+								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+							</div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">9-10h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">10-11h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">11h-12h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">12h-13h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">13h-14h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">14h-15h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">15h-16h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+								<div class="head">16h-17h</div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+								<div class="contenu"></div>
+							</div>
+						<div class="colonne">
+							<div class="head">17h-18h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">18h-19h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">19h-20h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+						<div class="colonne">
+							<div class="head">20h-21h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-lg-2">
 					<div>
 						<p id="posX"></p>
 						<p id="posY"></p>
 						<p id="long"></p>
 					</div>
-
 
 					<!--
 
@@ -270,174 +531,6 @@
 					-->
 
 				</div>
-				<div class="col-lg-10">
-
-					<div class="col-lg-12" style="background-color:#bff442" id="limitation">
-
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu">
-									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-									</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu"></div>
-								<div class="contenu">
-									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
-								</div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-
-					</div>
-				</div>
-
 			</div>
 
 

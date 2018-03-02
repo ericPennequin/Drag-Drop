@@ -31,230 +31,256 @@
 			flex-direction: row;
 
 
-
 		}
-		.colonne{
+		.column{
 			display: flex;
 			flex-direction: column;
 
+		}
+		div[class*='col']{
+			padding: 0;}
+		.content{
+			position: relative;
+			box-sizing: border-box;
+
+			/*
+			border: solid 0.1px;
+			height: 30px;
+			width:60px;
+			*/
 		}
 
 
 	</style>
 <script type="text/javascript">
+
 	var granularity=15;
 	var common_widthsize=60;
 	var common_heightsize=30;
+	var columnquantity=12;
+	var linequantity=5;
+	var start_h=7;
+
 	$(document).ready(function(){
-
-		$('.enfant').resizable().draggable();
-
-		$('.enfant')
-			.resizable({
-				axis:'x',
-				snap : true,
-				grid : [granularity , granularity],
-				animate : false,
-				animateDuration: "fast",
-				start: function(e, ui) {
-					//alert('resizing started');
-				},
-				resize: function(e, ui) {
-					var that=this;
-					var offset = $(this).offset();
-					GetPosition(offset, that)
-					//GetSize(that)
-
-				},
-				stop: function(e, ui) {
-					//alert('resizing stopped');
-				}
-			});
-
-		$('.enfant')
-			.draggable({
-				axis:'x',
-				snap : true,
-				grid : [common_heightsize , common_widthsize/2],
-				start:function (e,ui) {
-					console.log("start")
-
-				},
-				create:function (e,ui) {
-					console.log("create")
-				},
-				stop:function (e,ui) {
-					console.log("stop")
-				},
-				drag:function (e,ui) {
-
-					console.log("drag");
-					var offset = $(this).offset();
-					var that=this;
-					GetPosition(offset, that)
-				}
-
-
-			});
-
-
-
-/*
-
-		$('.contenu').draggable({
-			axis:'x',
-			snap : true,
-			grid : [common_heightsize , common_widthsize/2],
-
-			drag: function(){
-				var offset = $(this).offset();
-				var that=this;
-				GetPosition(offset, that)
-			/!*
-				var xPos = offset.left;
-				var yPos = offset.top;
-				console.log(xPos + " " + yPos);
-				$('#posX').text('x (left) : ' + xPos);
-				$('#posY').text('y (top) : ' + yPos);
-				GetSize(that=this)*!/
-
-			}
-
-			//axis:'y'
-			//containment : '#limitation'
-		}).find('.enfant').resizable({
-			axis:'x',
-			snap : true,
-			grid : [granularity , granularity],
-			animate : false,
-			animateDuration: "fast",
-			resize:function(){
-				GetSize(that=this)
-			}
-
-
-		});
-
-*/
-
-
-
-		$(".contenu").css({
-			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
-			//border:  '#f47441',
-            
-		});
-
 
 
 		$("#limitation").css({
-			width:common_widthsize * 12 + 'px',
-			height:common_heightsize * 12 + 'px'
-
+			width:common_widthsize * columnquantity + 'px',
+			height:common_heightsize * (linequantity+1) + 'px'
 		});
 
 
-/*
-		$("#zone1").css({
-			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
+
+		var current_h=start_h;
+		for(var col=0; col<columnquantity;col++){
+
+			$('#limitation').append('<div class="column" id= "col'+col+'"></div>');
+			$('#col'+col).append('<div class="header" id="cell'+col+'">'+current_h+'h-'+(current_h+1)+'h</div>');
+			current_h++;
+			for(var lin=0;lin<linequantity;lin++){
+				$('#col'+col).append('<div class="content" id="cell'+col+lin+'"></div>');
+
+			}
+
+			GetCssParams()
+
+		}
+
+
+
+		GetMousePosition();
+
+		$(".content").click(function () {
+			if(this.childElementCount>0){
+				console.log('sur instance')
+
+			}else {
+				console.log(this.id)
+				$('#'+this.id).append('<div class="child" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>')
+				GetChildParams()
+
+			}
+
 
 		});
-		$("#zone1").attr({
-			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
 
-		});
-
-
-		$('#drag').draggable();
-		$('#not-drag').draggable();
-
-		$('#drop').droppable({
-		    accept : '#drag', // je n'accepte que le bloc ayant "drag" pour id
-		    drop : function(){
-		        alert('Action terminée !');
-		    }
-		});
-*/
-
-/*
-
-		$('#resizeDiv')
-			.draggable()
-			.resizable();
-
-		$('#resizeDiv')
-			.resizable({
-				start: function(e, ui) {
-					//alert('resizing started');
-				},
-				resize: function(e, ui) {
-
-				},
-				stop: function(e, ui) {
-					//alert('resizing stopped');
-				}
-			});
-
-		$('#resizeDiv')
-			.draggable({
-				start:function (e,ui) {
-					console.log("start")
-				},
-				create:function (e,ui) {
-					console.log("create")
-				},
-				stop:function (e,ui) {
-					console.log("stop")
-				},
-				drag:function (e,ui) {
-					console.log("drag")
-				}
-
-
-			});
-
-		$("#resizeDiv").css({
-			width:common_widthsize + 'px',
-			height:common_heightsize + 'px'
-		})
-*/
+		GetChildParams()
 
 
 	});
 
-	function GetPosition(offset, that) {
+	//Functions
+	function GetMousePosition() {
+
+
+	}
+
+
+	function GetCssParams() {
+		/*TODO : a factoriser
+		* **/
+		$(".header").css({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px',
+			padding:'0px',
+			border: '0.1px solid',
+			margin: '0px'
+			//border:  '#f47441 inset'
+		});
+		$(".content").css({
+			width:common_widthsize + 'px',
+			height:common_heightsize + 'px',
+			padding:'0px',
+			border: '0.1px solid',
+			margin: '0px'
+			//border:  '#f47441 inset'
+		});
+		/*
+		*/
+
+
+
+	}
+
+	function GetChildParams() {
+		$('.child').resizable().draggable();
+
+		$('.child')
+			.resizable({
+				snap : true,
+				grid : [granularity , granularity],
+				animate : true,
+				animateDuration: "fast",
+				//axis:'x',//Aucun effet
+				maxHeight:common_heightsize,
+				minHeight:common_heightsize,
+
+				start: function(e, ui) {
+					//alert('resizing started');
+				},
+				resize: function(e, ui) {
+					var that=this;
+					var offset = $(this).offset();
+					DisplayPositionAndSize(offset, that)
+
+
+				},
+				stop: function(e, ui) {
+					//alert('resizing stopped');
+				}
+			});
+
+		$('.child')
+			.draggable({
+				axis:'x',
+				containment:"#limitation",
+				snap : true,
+				grid : [granularity , granularity],
+				start:function (e,ui) {
+					console.log("start")
+
+				},
+				create:function (e,ui) {
+					console.log("create")
+				},
+				stop:function (e,ui) {
+					console.log("stop")
+				},
+				drag:function (e,ui) {
+					/**e choppe les évènements
+					 * ui: helper, offset, originalposition position
+					 * */
+
+					console.log("drag");
+					var offset = $(this).offset();
+					var that=this;
+					DisplayPositionAndSize(offset, that)
+				}
+
+
+			});
+
+	}
+
+	function DisplayPositionAndSize(offset, that) {
 		console.log('ClientTop : '+ that.clientTop);
 		console.log('ClientLeft : '+ that.clientLeft);
 		console.log('clientWidth : '+ that.clientWidth);
-		var xPos = offset.left;
-		var yPos = offset.top;
-		//console.log(xPos + " " + yPos);
-		$('#posX').text('x (left) : ' + that.offsetLeft);
-		$('#posY').text('y (top) : ' + yPos);
-		$('#long').text('durée: ' + that.clientWidth + " mn");
 
-		//GetSize(that)
+		var duree = ConvMnHours(that.clientWidth);
+		var debut=ConvMnHours(that.offsetLeft+start_h*60);
+		var fin=ConvMnHours(that.offsetLeft+that.clientWidth+start_h*60);
 
-	}
+		$('#posX').text('début : ' +debut);
+		$('#posY').text('fin : ' + fin);
+		$('#long').text('durée: ' + duree);
 
-	function GetSize(that) {
-		console.log($(that).width());
-		$('#long').text('durée: ' + $(that).width() + " mn");
 
 	}
+
+	function ConvMnHours(mn) {
+		var hours=Math.floor(mn/60);
+		var minutes=mn%60;
+		var message;
+		if (minutes != 0){
+			message=hours + "h" + minutes;
+
+		}else {
+			message=hours + "h";
+		}
+		return message;
+	}
+
 
 
 </script>
 
-	<!--
-	<div id="resizeDiv" style="background-color:#bff442; width:30px; height:30px">ff</div>
--->
-
 		<div class="row">
 			<div class="col-lg-12">
+				<div class="col-lg-2">
+					<p>Planning</p>
+				</div>
+
+				<div class="col-lg-8">
+
+					<div class="col-lg-12" style="background-color:#bff442" id="limitation">
+<!--
+
+						<div class="column">
+							<div class="head">8-9h</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu">
+								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+								</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu">
+
+							</div>
+							<div class="contenu"></div>
+							<div class="contenu">
+								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
+							</div>
+							<div class="contenu"></div>
+						</div>
+
+-->
+					</div>
+				</div>
 				<div class="col-lg-2">
 					<div>
 						<p id="posX"></p>
@@ -262,182 +288,7 @@
 						<p id="long"></p>
 					</div>
 
-
-					<!--
-
-					<canvas id='zone1' width='+common_widthsize+' height='common_heightsize' style ='display:block;margin:auto; background:blue'>
-<canvas id='zone1' width="60px" height="30px" style ='display:block;margin:auto; background:blue'></canvas>
-					-->
-
 				</div>
-				<div class="col-lg-10">
-
-					<div class="col-lg-12" style="background-color:#bff442" id="limitation">
-
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu">
-									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-									</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu">
-
-								</div>
-								<div class="contenu"></div>
-								<div class="contenu">
-									<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
-								</div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-							<div class="colonne">
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-								<div class="contenu"></div>
-							</div>
-
-					</div>
-				</div>
-
 			</div>
 
 

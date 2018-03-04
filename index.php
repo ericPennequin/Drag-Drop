@@ -22,8 +22,8 @@
 		<script src="ressources/jquery-ui.min.js" ></script>
 
 
-	</head>
-	<body>
+
+
 	<style>
 
 		#limitation{
@@ -52,6 +52,9 @@
 
 
 	</style>
+
+    </head>
+    <body>
 <script type="text/javascript">
 
 	var granularity=15;
@@ -63,6 +66,8 @@
 
 	$(document).ready(function(){
 
+        //var general_offset=document.getElementById('limitation').offsetLeft;
+
 
 		$("#limitation").css({
 			width:common_widthsize * columnquantity + 'px',
@@ -71,14 +76,15 @@
 
 
 
-		var current_h=start_h;
-		for(var col=0; col<columnquantity;col++){
 
-			$('#limitation').append('<div class="column" id= "col'+col+'"></div>');
-			$('#col'+col).append('<div class="header" id="cell'+col+'">'+current_h+'h-'+(current_h+1)+'h</div>');
+		var current_h=start_h;
+        for(var col=0; col<columnquantity;col++){
+
+			$('#limitation').append('<div class="column" id= "col_'+col+'"></div>');
+			$('#col_'+col).append('<div class="header" id="cell_'+col+'">'+current_h+'h-'+(current_h+1)+'h</div>');
 			current_h++;
 			for(var lin=0;lin<linequantity;lin++){
-				$('#col'+col).append('<div class="content" id="cell'+col+lin+'"></div>');
+				$('#col_'+col).append('<div class="content" id="cell_'+col+lin+'"></div>');
 
 			}
 
@@ -88,29 +94,32 @@
 
 
 
-		GetMousePosition();
+
 
 		$(".content").click(function () {
 			if(this.childElementCount>0){
 				console.log('sur instance')
 
 			}else {
-				console.log(this.id)
-				$('#'+this.id).append('<div class="child" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>')
-				GetChildParams()
-
+				//console.log(this.id);
+				$('#'+this.id).append('<div class="child" id="child_'+this.id+'" style="width:inherit; height:inherit; background-color: #2aabd2 "></div>');
+                //$('div.child').mouseover(GetMousePosition('child_'+this.id));
+				GetChildParams('child_'+this.id);
 			}
-
 
 		});
 
-		GetChildParams()
+
+
+
+		//GetChildParams()
 
 
 	});
 
 	//Functions
-	function GetMousePosition() {
+	function GetMousePosition(id) {
+	    console.log('hi')
 
 
 	}
@@ -142,33 +151,10 @@
 
 	}
 
-	function GetChildParams() {
+	function GetChildParams(id) {
 		$('.child').resizable().draggable();
 
-		$('.child')
-			.resizable({
-				snap : true,
-				grid : [granularity , granularity],
-				animate : true,
-				animateDuration: "fast",
-				//axis:'x',//Aucun effet
-				maxHeight:common_heightsize,
-				minHeight:common_heightsize,
 
-				start: function(e, ui) {
-					//alert('resizing started');
-				},
-				resize: function(e, ui) {
-					var that=this;
-					var offset = $(this).offset();
-					DisplayPositionAndSize(offset, that)
-
-
-				},
-				stop: function(e, ui) {
-					//alert('resizing stopped');
-				}
-			});
 
 		$('.child')
 			.draggable({
@@ -177,39 +163,65 @@
 				snap : true,
 				grid : [granularity , granularity],
 				start:function (e,ui) {
-					console.log("start")
+					//console.log("start")
 
 				},
 				create:function (e,ui) {
-					console.log("create")
+					//console.log("create")
 				},
 				stop:function (e,ui) {
-					console.log("stop")
+					//console.log("stop")
 				},
 				drag:function (e,ui) {
 					/**e choppe les évènements
 					 * ui: helper, offset, originalposition position
 					 * */
 
-					console.log("drag");
-					var offset = $(this).offset();
+					//console.log("drag");
+					var offset = this.offsetLeft;
+					console.log(offset);
 					var that=this;
 					DisplayPositionAndSize(offset, that)
 				}
 
 
 			});
+        $('.child')
+            .resizable({
+                snap : true,
+                grid : [granularity , granularity],
+                animate : true,
+                animateDuration: "fast",
+                //containment:"#limitation",
+                //axis:'x',//Aucun effet
+                maxHeight:common_heightsize,
+                minHeight:common_heightsize,
+
+                start: function(e, ui) {
+                    //alert('resizing started');
+                },
+                resize: function(e, ui) {
+                    var that=this;
+                    var offset = this.offsetLeft;
+                    DisplayPositionAndSize(offset, that)
+
+                },
+                stop: function(e, ui) {
+                    //alert('resizing stopped');
+                }
+            });
+        $('.child').mouseover(GetMousePosition(id))
 
 	}
 
 	function DisplayPositionAndSize(offset, that) {
-		console.log('ClientTop : '+ that.clientTop);
-		console.log('ClientLeft : '+ that.clientLeft);
-		console.log('clientWidth : '+ that.clientWidth);
+		//console.log('ClientTop : '+ that.clientTop);
+		//console.log('ClientLeft : '+ that.clientLeft);
+		//console.log('clientWidth : '+ that.clientWidth);
 
 		var duree = ConvMnHours(that.clientWidth);
-		var debut=ConvMnHours(that.offsetLeft+start_h*60);
-		var fin=ConvMnHours(that.offsetLeft+that.clientWidth+start_h*60);
+		var debut=ConvMnHours(that.parentNode.offsetLeft+offset+start_h*60);
+		var fin=ConvMnHours(that.parentNode.offsetLeft+offset+that.clientWidth+start_h*60);
 
 		$('#posX').text('début : ' +debut);
 		$('#posY').text('fin : ' + fin);
@@ -253,24 +265,12 @@
 							<div class="contenu">
 								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
 								</div>
-							<div class="contenu">
-
-							</div>
-							<div class="contenu">
-
-							</div>
-							<div class="contenu">
-
-							</div>
-							<div class="contenu">
-
-							</div>
-							<div class="contenu">
-
-							</div>
-							<div class="contenu">
-
-							</div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
+							<div class="contenu"></div>
 							<div class="contenu"></div>
 							<div class="contenu">
 								<div class="enfant" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>
@@ -290,29 +290,10 @@
 
 				</div>
 			</div>
-
-
-
 		</div>
-<!--
-			<form>
-
-
-			</form>
-			<div id="drag">
-				<p>Ceci est un élément valide</p>
-			</div>
-
-			<div id="not-drag">
-				<p>Ceci n'est pas un élément valide</p>
-			</div>
-
-			<div id="drop">
-				<p>Déposer ici</p>
-			</div>
-
-	-->
-
+<script>
+    //$('div.child').mouseover(GetMousePosition('child_'+this.id))
+</script>
 
 	</body>
 </html>

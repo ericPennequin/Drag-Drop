@@ -5,6 +5,7 @@
  * Date: 28/02/2018
  * Time: 16:32
  */
+
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +41,7 @@
 		div[class*='col']{
 			padding: 0;}
 		.content{
-			position: relative;
+			/*position: relative;*/
 			box-sizing: border-box;
 
 			/*
@@ -91,21 +92,32 @@
 		GetMousePosition();
 
 		$(".content").click(function () {
+
+
 			if(this.childElementCount>0){
+				/*TODO Ouvrir une instance (modale)
+				1 chopper l'id de l'instance
+				2 Afficher modale avec les infos déja présentes
+				3 modifier/enregistrer
+				* **/
+
+
 				console.log('sur instance')
 
 			}else {
-				console.log(this.id)
-				$('#'+this.id).append('<div class="child" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>')
+			var current_instance_id=('Child_'+ this.id);
+				console.log(this.id);
+				$('#'+this.id).append('<div class="child" id="'+current_instance_id+'" style="width: inherit; height: inherit; background-color: #2aabd2 "></div>')
 				GetChildParams()
-
+				//Enregistrer en BDD l'instance
+				/*TODO Ouvrir une instance (modale)
+				1 chopper l'id de l'instance
+				2 Afficher modale avec les infos déja présentes (si existantes)
+				3 modifier/enregistrer
+				* **/
 			}
 
-
 		});
-
-		GetChildParams()
-
 
 	});
 
@@ -133,7 +145,7 @@
 			padding:'0px',
 			border: '0.1px solid',
 			margin: '0px'
-			//border:  '#f47441 inset'
+
 		});
 		/*
 		*/
@@ -207,6 +219,8 @@
 		console.log('ClientLeft : '+ that.clientLeft);
 		console.log('clientWidth : '+ that.clientWidth);
 
+		//.jQuery33100311395638735232352.uiDraggable.offset.parent.left
+
 		var duree = ConvMnHours(that.clientWidth);
 		var debut=ConvMnHours(that.offsetLeft+start_h*60);
 		var fin=ConvMnHours(that.offsetLeft+that.clientWidth+start_h*60);
@@ -231,6 +245,9 @@
 		return message;
 	}
 
+	function OpenInstance(id) {
+
+	}
 
 
 </script>
